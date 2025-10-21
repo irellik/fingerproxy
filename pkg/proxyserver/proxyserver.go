@@ -179,8 +179,18 @@ func (server *Server) serveHTTP1() {
 		return
 	}
 
-	// Here should be impossible
-	panic(err)
+	// Handle other errors gracefully instead of panicking
+	if err != nil {
+		if isNetworkOrClientError(err) {
+			server.vlogf("HTTP/1.1 server error (network/client): %v", err)
+		} else {
+			server.logf("HTTP/1.1 server error: %v", err)
+		}
+		// Shutdown the server context on unexpected errors
+		if !server.shuttingDown() {
+			server.ctxCancel()
+		}
+	}
 }
 
 func (server *Server) setupServe() {
