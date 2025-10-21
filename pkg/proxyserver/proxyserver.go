@@ -170,21 +170,16 @@ func (server *Server) serveHTTP1() {
 		return
 	}
 
-	server.logf("unexpected error in serveHTTP1, shutting down server: %v", err)
-	server.ctxCancel()
-
-	// Handle other errors gracefully instead of panicking
-	if err != nil {
-		if isNetworkOrClientError(err) {
-			server.vlogf("HTTP/1.1 server error (network/client): %v", err)
-		} else {
-			server.logf("HTTP/1.1 server error: %v", err)
-		}
-		// Shutdown the server context on unexpected errors
+	if errors.Is(err, http.ErrServerClosed) {
+		// ErrServerClosed means internal HTTP server is shutting down,
+		// if our server is not shutting down, then shut it down
 		if !server.shuttingDown() {
 			server.ctxCancel()
 		}
+		return
 	}
+
+	return
 }
 
 func (server *Server) setupServe() {
