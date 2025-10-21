@@ -10,10 +10,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/0x4D31/fingerproxy/pkg/ja3"
-	"github.com/0x4D31/fingerproxy/pkg/ja4"
-	"github.com/0x4D31/fingerproxy/pkg/metadata"
 	"github.com/dreadl0ck/tlsx"
+	"github.com/irellik/fingerproxy/pkg/ja3"
+	"github.com/irellik/fingerproxy/pkg/ja4"
+	"github.com/irellik/fingerproxy/pkg/metadata"
 )
 
 var (

@@ -1,4 +1,4 @@
-module github.com/0x4D31/fingerproxy
+module github.com/irellik/fingerproxy
 
 go 1.21.7
 

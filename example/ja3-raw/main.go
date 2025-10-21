@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 
-	"github.com/0x4D31/fingerproxy"
-	"github.com/0x4D31/fingerproxy/pkg/fingerprint"
-	"github.com/0x4D31/fingerproxy/pkg/ja3"
-	"github.com/0x4D31/fingerproxy/pkg/metadata"
-	"github.com/0x4D31/fingerproxy/pkg/reverseproxy"
 	"github.com/dreadl0ck/tlsx"
+	"github.com/irellik/fingerproxy"
+	"github.com/irellik/fingerproxy/pkg/fingerprint"
+	"github.com/irellik/fingerproxy/pkg/ja3"
+	"github.com/irellik/fingerproxy/pkg/metadata"
+	"github.com/irellik/fingerproxy/pkg/reverseproxy"
 )
 
 func main() {

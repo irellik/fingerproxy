@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/0x4D31/fingerproxy"
-	"github.com/0x4D31/fingerproxy/pkg/fingerprint"
-	"github.com/0x4D31/fingerproxy/pkg/metadata"
-	"github.com/0x4D31/fingerproxy/pkg/reverseproxy"
+	"github.com/irellik/fingerproxy"
+	"github.com/irellik/fingerproxy/pkg/fingerprint"
+	"github.com/irellik/fingerproxy/pkg/metadata"
+	"github.com/irellik/fingerproxy/pkg/reverseproxy"
 
 	utls "github.com/refraction-networking/utls"
 )

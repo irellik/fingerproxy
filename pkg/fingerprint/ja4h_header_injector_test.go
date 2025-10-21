@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/0x4D31/fingerproxy/pkg/metadata"
+	"github.com/irellik/fingerproxy/pkg/metadata"
 )
 
 func TestJA4HHeaderInjector(t *testing.T) {

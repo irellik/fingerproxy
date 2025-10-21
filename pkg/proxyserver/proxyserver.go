@@ -17,9 +17,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/0x4D31/fingerproxy/pkg/hack"
-	"github.com/0x4D31/fingerproxy/pkg/http2"
-	"github.com/0x4D31/fingerproxy/pkg/metadata"
+	"github.com/irellik/fingerproxy/pkg/hack"
+	"github.com/irellik/fingerproxy/pkg/http2"
+	"github.com/irellik/fingerproxy/pkg/metadata"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 )

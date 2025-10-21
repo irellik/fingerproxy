@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/0x4D31/fingerproxy/pkg/ja4"
 	"github.com/dreadl0ck/tlsx"
+	"github.com/irellik/fingerproxy/pkg/ja4"
 	"github.com/refraction-networking/utls/dicttls"
 )
 

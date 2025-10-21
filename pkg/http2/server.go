@@ -48,7 +48,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/0x4D31/fingerproxy/pkg/metadata"
+	"github.com/irellik/fingerproxy/pkg/metadata"
 	"golang.org/x/net/http/httpguts"
 	"golang.org/x/net/http2/hpack"
 )

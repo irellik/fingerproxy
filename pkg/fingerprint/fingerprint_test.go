@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/0x4D31/fingerproxy/pkg/metadata"
+	"github.com/irellik/fingerproxy/pkg/metadata"
 )
 
 func hexToBytes(t *testing.T, s string) []byte {

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/0x4D31/fingerproxy/pkg/ja4h"
-	"github.com/0x4D31/fingerproxy/pkg/metadata"
+	"github.com/irellik/fingerproxy/pkg/ja4h"
+	"github.com/irellik/fingerproxy/pkg/metadata"
 	"github.com/prometheus/client_golang/prometheus"
 )
 

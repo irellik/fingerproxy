@@ -132,7 +132,7 @@ func parseFlags() {
 	flag.Parse()
 
 	if *flagVersion {
-		fmt.Fprintln(os.Stderr, "Fingerproxy - https://github.com/0x4D31/fingerproxy")
+		fmt.Fprintln(os.Stderr, "Fingerproxy - https://github.com/irellik/fingerproxy")
 		fmt.Fprintf(os.Stderr, "Version: %s (%s)\n", BuildTag, BuildCommit)
 		os.Exit(0)
 	}

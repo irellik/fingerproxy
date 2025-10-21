@@ -13,11 +13,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/0x4D31/fingerproxy/pkg/certwatcher"
-	"github.com/0x4D31/fingerproxy/pkg/debug"
-	fp "github.com/0x4D31/fingerproxy/pkg/fingerprint"
-	"github.com/0x4D31/fingerproxy/pkg/proxyserver"
-	"github.com/0x4D31/fingerproxy/pkg/reverseproxy"
+	"github.com/irellik/fingerproxy/pkg/certwatcher"
+	"github.com/irellik/fingerproxy/pkg/debug"
+	fp "github.com/irellik/fingerproxy/pkg/fingerprint"
+	"github.com/irellik/fingerproxy/pkg/proxyserver"
+	"github.com/irellik/fingerproxy/pkg/reverseproxy"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )

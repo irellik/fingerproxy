@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/0x4D31/fingerproxy"
+	"github.com/irellik/fingerproxy"
 	"golang.org/x/net/http2"
 )
 
