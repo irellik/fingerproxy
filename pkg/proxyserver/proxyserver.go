@@ -242,7 +242,7 @@ func (server *Server) Serve(ln net.Listener) error {
 }
 
 func (server *Server) ListenAndServe(listenAddr string) error {
-	ln, err := net.Listen("tcp", listenAddr)
+	ln, err := net.Listen("tcp4", listenAddr)
 	if err != nil {
 		return err
 	}
