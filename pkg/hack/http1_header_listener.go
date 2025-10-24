@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 	"net"
+	"syscall"
 )
 
 // HTTP1HeaderListener wraps an existing listener and returns
@@ -29,13 +30,27 @@ func (l *HTTP1HeaderListener) Accept() (net.Conn, error) {
 		}
 		hc, err := NewHTTP1HeaderConn(c)
 		if err != nil {
-			c.Close()
-			// Ignore errors where the client disconnects before
-			// completing the HTTP request or fails to send headers
-			// in time. These should not bring down the HTTP
-			// server.
+			// Must close the underlying TLSClientHelloConn properly
+			// to trigger Done() and prevent goroutine leak
+			if tlsConn, ok := c.(*TLSClientHelloConn); ok {
+				tlsConn.Close() // This calls Done() internally
+			} else {
+				c.Close()
+			}
+			// Ignore all network and client errors - these should not bring down the HTTP server.
+			// Only propagate errors that indicate a serious problem with the listener itself.
 			var ne net.Error
-			if errors.Is(err, io.EOF) || errors.Is(err, io.ErrUnexpectedEOF) || (errors.As(err, &ne) && ne.Timeout()) {
+			if errors.Is(err, io.EOF) ||
+				errors.Is(err, io.ErrUnexpectedEOF) ||
+				errors.Is(err, syscall.ECONNRESET) ||
+				errors.Is(err, syscall.EPIPE) ||
+				errors.Is(err, syscall.ECONNABORTED) ||
+				(errors.As(err, &ne) && (ne.Timeout() || ne.Temporary())) {
+				continue
+			}
+			// For any other network operation error, also continue
+			var opErr *net.OpError
+			if errors.As(err, &opErr) {
 				continue
 			}
 			return nil, err

@@ -3,10 +3,12 @@ package hack
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"net"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -41,6 +43,14 @@ func NewHTTP1HeaderConn(conn net.Conn) (*HTTP1HeaderConn, error) {
 	for {
 		line, err := br.ReadString('\n')
 		if err != nil {
+			// Improve error handling for connection reset and other network errors
+			if errors.Is(err, io.EOF) || errors.Is(err, io.ErrUnexpectedEOF) || errors.Is(err, syscall.ECONNRESET) {
+				return nil, err
+			}
+			var opErr *net.OpError
+			if errors.As(err, &opErr) {
+				return nil, err
+			}
 			return nil, err
 		}
 		buf.WriteString(line)
@@ -65,6 +75,11 @@ func NewHTTP1HeaderConn(conn net.Conn) (*HTTP1HeaderConn, error) {
 
 func (c *HTTP1HeaderConn) Read(b []byte) (int, error) {
 	return c.r.Read(b)
+}
+
+// Close closes the underlying connection, which will trigger Done() for TLSClientHelloConn
+func (c *HTTP1HeaderConn) Close() error {
+	return c.Conn.Close()
 }
 
 func (c *HTTP1HeaderConn) OrderedHeaders() []string {

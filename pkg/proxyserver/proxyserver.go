@@ -122,13 +122,30 @@ func (server *Server) serveConn(conn net.Conn) {
 		})
 	} else {
 		ctx, done := context.WithCancel(context.Background())
-		server.http1ConnChannelListener.SendToChannel(&hack.TLSClientHelloConn{
+
+		conn := &hack.TLSClientHelloConn{
 			Done:              done,
 			Conn:              tlsConn,
 			ClientHelloRecord: rec,
-		})
-		// wait for the connection to be served by HTTP/1.1 server
-		<-ctx.Done()
+		}
+
+		// Send connection to HTTP/1.1 server
+		server.http1ConnChannelListener.SendToChannel(conn)
+
+		// Wait for the connection to be served by HTTP/1.1 server
+		// Add timeout to prevent goroutine leak if something goes wrong
+		select {
+		case <-ctx.Done():
+			// Connection was properly handled and closed
+		case <-server.ctx.Done():
+			// Server is shutting down, close the connection
+			conn.Close()
+		case <-time.After(5 * time.Minute):
+			// Safety timeout - this should never happen in normal operation
+			// but prevents goroutine leak if the HTTP server fails to close the connection
+			server.logf("HTTP/1.1 connection timeout for %s, forcing close", conn.RemoteAddr())
+			conn.Close()
+		}
 	}
 
 	server.metricsRequestsTotalInc("1", cs.NegotiatedProtocol)
@@ -179,7 +196,10 @@ func (server *Server) serveHTTP1() {
 		return
 	}
 
-	return
+	// Any other error from Serve() is unexpected and should not happen
+	// because HTTP1HeaderListener.Accept() handles all network/client errors
+	server.logf("HTTP/1.1 server unexpected error: %s", err)
+	panic(err)
 }
 
 func (server *Server) setupServe() {
@@ -242,7 +262,7 @@ func (server *Server) Serve(ln net.Listener) error {
 }
 
 func (server *Server) ListenAndServe(listenAddr string) error {
-	ln, err := net.Listen("tcp4", listenAddr)
+	ln, err := net.Listen("tcp", listenAddr)
 	if err != nil {
 		return err
 	}
@@ -327,7 +347,10 @@ func isNetworkOrClientError(err error) bool {
 	return errors.Is(err, context.Canceled) ||
 		errors.Is(err, context.DeadlineExceeded) ||
 		errors.Is(err, io.EOF) ||
+		errors.Is(err, io.ErrUnexpectedEOF) ||
 		errors.Is(err, syscall.ECONNRESET) ||
+		errors.Is(err, syscall.EPIPE) ||
+		errors.Is(err, syscall.ECONNABORTED) ||
 		// https://github.com/golang/go/blob/release-branch.go1.22/src/crypto/tls/conn.go#L724
 		(errors.As(err, &netOpErr) && netOpErr.Op == "remote error")
 }
